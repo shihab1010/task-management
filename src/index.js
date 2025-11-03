@@ -58,6 +58,18 @@ app.get("/health", (req, res) => {
     uptime: process.uptime(), // in seconds
   });
 });
+
+// /task/:id route
+app.get("/task/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const task = tasks.find((t) => t.id === id);
+
+  if (!task) {
+    return res.status(404).json({ error: "Task not found" });
+  }
+
+  res.json(task);
+});
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
