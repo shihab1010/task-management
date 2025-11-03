@@ -39,20 +39,29 @@ const tasks = [
   },
 ];
 
-
+// /tasks → return all tasks
 router.get("/tasks", (req, res) => {
   res.json(tasks);
 });
 
-
+// /task/:id → return a single task by ID with error handling
 router.get("/task/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = Number(req.params.id);
+
+  // Handle invalid ID format (e.g., non-numeric)
+  if (isNaN(id) || id <= 0) {
+    return res.status(400).json({ error: "Invalid ID format" });
+  }
+
+  // Find the task
   const task = tasks.find((t) => t.id === id);
 
+  // Handle task not found
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
 
+  // Return found task
   res.json(task);
 });
 
