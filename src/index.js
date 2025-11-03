@@ -2,74 +2,28 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-// Tasks data
+// Import routes
+const taskRoutes = require("./routes/tasks");
 
-const tasks = [
-  {
-    id: 1,
-    title: "Learn Node.js",
-    completed: false,
-    priority: "high",
-    createdAt: new Date("2025-11-01T09:00:00Z"),
-  },
-  {
-    id: 2,
-    title: "Build REST API",
-    completed: false,
-    priority: "medium",
-    createdAt: new Date("2025-11-02T10:30:00Z"),
-  },
-  {
-    id: 3,
-    title: "Test with Postman",
-    completed: false,
-    priority: "low",
-    createdAt: new Date("2025-11-03T11:00:00Z"),
-  },
-  {
-    id: 4,
-    title: "Deploy to Render",
-    completed: false,
-    priority: "high",
-    createdAt: new Date("2025-11-03T12:15:00Z"),
-  },
-  {
-    id: 5,
-    title: "Write Documentation",
-    completed: false,
-    priority: "medium",
-    createdAt: new Date("2025-11-03T13:45:00Z"),
-  },
-];
- 
+// Middleware
+app.use(express.json());
+
+
 app.get("/", (req, res) => {
   res.send("Task Management API is running!");
 });
 
-// Tasks route 
-app.get("/tasks", (req, res) => {
-  res.json(tasks);
-});
-
-// Health route 
+// Health check route
 app.get("/health", (req, res) => {
   res.json({
     status: "healthy",
-    uptime: process.uptime(), // in seconds
+    uptime: process.uptime(),
   });
 });
 
-// /task/:id route
-app.get("/task/:id", (req, res) => {
-  const id = parseInt(req.params.id);
-  const task = tasks.find((t) => t.id === id);
+//  task routes
+app.use("/", taskRoutes);
 
-  if (!task) {
-    return res.status(404).json({ error: "Task not found" });
-  }
-
-  res.json(task);
-});
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`✅ Server running at http://localhost:${port}`);
 });
